@@ -1,38 +1,23 @@
-import os
+from google import genai
+from google.genai import types
 from typing import List
-import httpx
-
 
 async def call_gemini(api_key: str, model: str, prompt: str, max_output_tokens: int = 800) -> str:
-    """Calls the Google Generative Language REST endpoint (adjustable) and returns text.
-
-    NOTE: The request shape may vary by provider/model. If your account exposes a different
-    REST contract for Gemini, update this function accordingly.
-    """
-    base = os.getenv("GEMINI_ENDPOINT") or "https://generativelanguage.googleapis.com/v1beta2"
-    url = f"{base}/{model}:generate?key={api_key}"
-
-    # Use the common "prompt" shape used by Generative Language API (text prompt)
-    payload = {
-        "prompt": {"text": prompt},
-        "temperature": 0.2,
-        "maxOutputTokens": max_output_tokens,
-    }
-
-    async with httpx.AsyncClient(timeout=30) as client:
-        r = await client.post(url, json=payload)
-        r.raise_for_status()
-        data = r.json()
-
-    # Try a few common places the response text might appear
-    # generativelanguage typically has: data['candidates'][0]['content']
-    if isinstance(data, dict):
-        cands = data.get("candidates") or data.get("outputs")
-        if cands and len(cands) > 0:
-            first = cands[0]
-            return first.get("content") or first.get("text") or first.get("output") or ""
-
-    return str(data)
+    """Calls the Google GenAI SDK to generate content."""
+    client = genai.Client(api_key=api_key)
+    
+    try:
+        response = await client.aio.models.generate_content(
+            model=model,
+            contents=prompt,
+            config=types.GenerateContentConfig(
+                max_output_tokens=max_output_tokens,
+                temperature=0.2
+            )
+        )
+        return response.text if response.text else ""
+    except Exception as e:
+        return f"Error calling Gemini API: {e}"
 
 
 def chunk_text(text: str, max_chars: int = 6000) -> List[str]:

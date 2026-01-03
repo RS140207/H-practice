@@ -20,13 +20,17 @@ def extract_video_id(url: str) -> str:
 def get_transcript_text(video_id: str, languages: List[str] = ["en"]) -> str:
     """Fetches and concatenates transcript segments into a single string."""
     try:
-        transcript = YouTubeTranscriptApi.get_transcript(video_id, languages=languages)
+        # Using instantiable YouTubeTranscriptApi with fetch method
+        transcript_obj = YouTubeTranscriptApi().fetch(video_id)
+        # transcript_obj is a FetchedTranscript containing a list of snippets
+        segments = [s.text for s in transcript_obj.snippets]
     except TranscriptsDisabled:
         raise RuntimeError("Transcripts are disabled for this video")
     except NoTranscriptFound:
         raise RuntimeError("No transcript found for this video")
+    except Exception as e:
+        raise RuntimeError(f"Transcript fetch error: {e}")
 
-    segments = [seg.get("text", "") for seg in transcript]
     # join intelligently to preserve spacing
     text = " ".join(s.strip().replace("\n", " ") for s in segments if s.strip())
     return text

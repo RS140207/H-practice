@@ -1,4 +1,8 @@
 import os
+from dotenv import load_dotenv
+
+load_dotenv()
+
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel, HttpUrl
 
@@ -8,7 +12,7 @@ from .summarizer import summarize_transcript
 app = FastAPI(title="YouTube Transcribe + Gemini Summary")
 
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
-GEMINI_MODEL = os.getenv("GEMINI_MODEL") or "models/text-bison-001"
+GEMINI_MODEL = os.getenv("GEMINI_MODEL") or "gemini-2.5-flash"
 GEMINI_MAX_CHARS = int(os.getenv("GEMINI_MAX_CHARS") or 6000)
 
 
