@@ -5,13 +5,13 @@ export default function TranscribeForm({ onSuccess, backendBase }) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  async function handleSubmit(e) {
-    e.preventDefault();
+  async function handleSubmit(endpoint) {
+    if (loading) return; // Prevent double submit
     setError(null);
     if (!url) return setError("Please enter a YouTube URL or ID.");
     setLoading(true);
     try {
-      const res = await fetch(`${backendBase}/transcribe`, {
+      const res = await fetch(`${backendBase}${endpoint}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ youtube_url: url }),
@@ -22,7 +22,7 @@ export default function TranscribeForm({ onSuccess, backendBase }) {
       }
       const data = await res.json();
       onSuccess(data);
-      setUrl("");
+      // setUrl(""); // Optional: clear URL after success, or keep it for next action? Keep it is better for UX if they want to summarize after transcribing.
     } catch (e) {
       setError(e.message || "Request failed");
     } finally {
@@ -40,8 +40,28 @@ export default function TranscribeForm({ onSuccess, backendBase }) {
           value={url}
           onChange={(e) => setUrl(e.target.value)}
         />
-        <button className="btn" type="submit" disabled={loading}>
-          {loading ? "Transcribing..." : "Transcribe"}
+        <button
+          className="btn"
+          type="submit"
+          disabled={loading}
+          onClick={(e) => {
+            e.preventDefault();
+            handleSubmit("/transcribe");
+          }}
+        >
+          {loading ? "Working..." : "Transcribe"}
+        </button>
+        <button
+          className="btn btn-secondary"
+          type="button"
+          disabled={loading}
+          onClick={(e) => {
+            e.preventDefault();
+            handleSubmit("/summarize");
+          }}
+          style={{ marginLeft: "0.5rem", backgroundColor: "#646cff" }}
+        >
+          {loading ? "Working..." : "Summarize"}
         </button>
       </div>
       {error && <div className="form-error">{error}</div>}
