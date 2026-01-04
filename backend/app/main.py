@@ -4,7 +4,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 from fastapi import FastAPI, HTTPException
-from pydantic import BaseModel, HttpUrl
+from pydantic import BaseModel
 
 from .transcriber import extract_video_id, get_transcript_text
 from .summarizer import summarize_transcript
@@ -12,14 +12,12 @@ from .summarizer import summarize_transcript
 app = FastAPI(title="YouTube Transcribe + Gemini Summary")
 
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
-GEMINI_MODEL = os.getenv("GEMINI_MODEL") or "gemini-2.5-flash"
+GEMINI_MODEL = os.getenv("GEMINI_MODEL")
 GEMINI_MAX_CHARS = int(os.getenv("GEMINI_MAX_CHARS") or 6000)
 
 
 class URLRequest(BaseModel):
     youtube_url: str
-    api_key: str | None = None
-    model: str | None = None
 
 
 @app.get("/health")
@@ -39,10 +37,12 @@ async def transcribe(req: URLRequest):
 
 @app.post("/summarize")
 async def summarize(req: URLRequest):
-    api_key = req.api_key or GEMINI_API_KEY
-    model = req.model or GEMINI_MODEL
+    api_key = GEMINI_API_KEY
+    model = GEMINI_MODEL
     if not api_key:
-        raise HTTPException(status_code=400, detail="Gemini API key not set. Provide in request or set GEMINI_API_KEY env var.")
+        raise HTTPException(status_code=400, detail="Gemini API key not set. Set GEMINI_API_KEY in your environment.")
+    if not model:
+        raise HTTPException(status_code=400, detail="Gemini model not set. Set GEMINI_MODEL in your environment.")
 
     try:
         video_id = extract_video_id(req.youtube_url)
