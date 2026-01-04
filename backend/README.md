@@ -24,3 +24,4 @@ curl -X POST "http://localhost:8000/summarize" -H "Content-Type: application/jso
 
 ---
 🔧 Developed: FastAPI + youtube-transcript-api + HTTPX
+Made by Samaira
