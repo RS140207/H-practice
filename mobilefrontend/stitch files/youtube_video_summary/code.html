@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>YouTube Summarizer</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Poppins:wght@600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
+<script>
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              primary: "#FF0000", // YouTube Red
+              "background-light": "#F3F4F6", // Gray-100
+              "background-dark": "#18181B", // Zinc-900
+              "surface-light": "#FFFFFF",
+              "surface-dark": "#27272A", // Zinc-800
+              "text-light": "#1F2937",
+              "text-dark": "#F9FAFB",
+            },
+            fontFamily: {
+              sans: ["Inter", "sans-serif"],
+              display: ["Poppins", "sans-serif"],
+            },
+            borderRadius: {
+              DEFAULT: "1rem",
+            },
+          },
+        },
+      };
+    </script>
+<style>.no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }.no-scrollbar {
+            -ms-overflow-style: none;scrollbar-width: none;}@keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fade-in {
+            animation: fadeIn 0.5s ease-out forwards;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark text-text-light dark:text-text-dark font-sans h-screen w-full flex justify-center overflow-hidden transition-colors duration-300">
+<div class="w-full max-w-md h-full flex flex-col relative bg-background-light dark:bg-background-dark shadow-2xl overflow-hidden">
+<div class="h-12 w-full flex justify-between items-end px-6 pb-2 text-xs font-semibold z-20">
+<span>9:41</span>
+<div class="flex gap-1.5 items-center">
+<span class="material-icons-round text-base">signal_cellular_alt</span>
+<span class="material-icons-round text-base">wifi</span>
+<span class="material-icons-round text-lg">battery_full</span>
+</div>
+</div>
+<header class="px-6 pt-4 pb-2 z-10 flex flex-col gap-2">
+<h1 class="font-display text-2xl font-bold tracking-tight text-text-light dark:text-white flex items-center gap-2">
+<span class="text-primary text-3xl material-icons-round">play_circle</span>
+                YouTube Summarizer
+            </h1>
+<p class="text-sm text-gray-500 dark:text-gray-400 font-medium">Get the gist in seconds.</p>
+</header>
+<main class="flex-1 flex flex-col px-6 pt-2 pb-6 overflow-hidden gap-6">
+<div class="relative group animate-fade-in" style="animation-delay: 0.1s;">
+<div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+<span class="material-icons-round text-gray-400 dark:text-gray-500">link</span>
+</div>
+<input class="block w-full pl-10 pr-12 py-3.5 bg-surface-light dark:bg-surface-dark border-none rounded-2xl text-sm text-gray-600 dark:text-gray-300 shadow-sm focus:ring-2 focus:ring-primary focus:outline-none transition-all truncate font-mono select-all" readonly="" type="text" value="https://www.youtube.com/watch?v=RfHS_zVrhV8"/>
+<button class="absolute inset-y-0 right-2 flex items-center">
+<div class="p-1.5 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors text-primary">
+<span class="material-icons-round text-xl">refresh</span>
+</div>
+</button>
+</div>
+<div class="flex-1 bg-surface-light dark:bg-surface-dark rounded-3xl shadow-sm border border-gray-200/50 dark:border-gray-700/50 p-1 overflow-hidden flex flex-col animate-fade-in relative" style="animation-delay: 0.2s;">
+<div class="px-5 pt-5 pb-3 flex justify-between items-center border-b border-gray-100 dark:border-gray-700/50">
+<div class="flex items-center gap-2">
+<span class="material-icons-round text-primary text-lg">auto_awesome</span>
+<h2 class="font-display font-semibold text-lg text-gray-800 dark:text-gray-100">Video Summary</h2>
+</div>
+<div class="flex gap-2">
+<button class="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-500 dark:text-gray-400 transition-colors" title="Copy Text">
+<span class="material-icons-round text-lg">content_copy</span>
+</button>
+<button class="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-500 dark:text-gray-400 transition-colors" title="Share">
+<span class="material-icons-round text-lg">ios_share</span>
+</button>
+</div>
+</div>
+<div class="flex-1 overflow-y-auto px-5 py-4 no-scrollbar">
+<article class="prose prose-sm prose-slate dark:prose-invert max-w-none">
+<h3 class="text-gray-900 dark:text-white font-bold mb-3 mt-0">Web Development in 2024</h3>
+<p class="text-gray-600 dark:text-gray-300 leading-relaxed mb-4">
+                            This video provides a comprehensive overview of the current landscape of web development. It highlights the shift towards full-stack frameworks like Next.js and Remix, emphasizing server-side rendering for better performance.
+                        </p>
+<ul class="list-disc pl-4 space-y-2 text-gray-600 dark:text-gray-300 mb-4 marker:text-primary">
+<li><strong>Frameworks:</strong> React continues to dominate, but Svelte and Vue are gaining traction for their simplicity.</li>
+<li><strong>Styling:</strong> Tailwind CSS has become the industry standard for utility-first styling.</li>
+<li><strong>AI Integration:</strong> Developers are increasingly using AI tools like Copilot to speed up coding workflows.</li>
+</ul>
+<p class="text-gray-600 dark:text-gray-300 leading-relaxed mb-4">
+                            The speaker also discusses the importance of accessibility and performance optimization. Core Web Vitals are now a critical factor for SEO ranking.
+                        </p>
+<div class="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-xl border border-blue-100 dark:border-blue-800/30 my-4">
+<p class="text-blue-800 dark:text-blue-200 text-xs font-semibold uppercase tracking-wider mb-1">Key Takeaway</p>
+<p class="text-blue-900 dark:text-blue-100 font-medium">Focus on learning fundamentals over tools. The tools change rapidly, but understanding HTTP, DOM, and JavaScript core concepts remains timeless.</p>
+</div>
+<p class="text-gray-600 dark:text-gray-300 leading-relaxed">
+                            Finally, the video concludes with a Q&amp;A session addressing common beginner pitfalls, such as "tutorial hell" and the importance of building real-world projects to solidify learning.
+                        </p>
+</article>
+<div class="h-8"></div>
+</div>
+<div class="absolute bottom-0 left-0 right-0 h-12 bg-gradient-to-t from-surface-light dark:from-surface-dark to-transparent pointer-events-none"></div>
+</div>
+<button class="w-full bg-primary hover:bg-red-600 text-white font-semibold py-4 rounded-2xl shadow-lg shadow-red-500/30 flex items-center justify-center gap-2 transform active:scale-95 transition-all animate-fade-in" style="animation-delay: 0.3s;">
+<span class="material-icons-round">add_circle_outline</span>
+                Summarize Another Video
+            </button>
+</main>
+<nav class="h-20 bg-surface-light dark:bg-surface-dark border-t border-gray-200 dark:border-gray-800 flex justify-around items-start pt-4 px-2">
+<button class="flex flex-col items-center gap-1 text-primary">
+<span class="material-icons-round text-2xl">home</span>
+<span class="text-[10px] font-medium">Home</span>
+</button>
+<button class="flex flex-col items-center gap-1 text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 transition-colors">
+<span class="material-icons-round text-2xl">history</span>
+<span class="text-[10px] font-medium">History</span>
+</button>
+<button class="flex flex-col items-center gap-1 text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 transition-colors">
+<span class="material-icons-round text-2xl">settings</span>
+<span class="text-[10px] font-medium">Settings</span>
+</button>
+</nav>
+<div class="absolute bottom-1 left-1/2 transform -translate-x-1/2 w-32 h-1 bg-gray-300 dark:bg-gray-600 rounded-full"></div>
+</div>
+<div class="fixed top-4 right-4 z-50">
+<button class="bg-gray-800 dark:bg-white text-white dark:text-gray-900 p-3 rounded-full shadow-lg transition-transform hover:scale-110" onclick="document.documentElement.classList.toggle('dark')">
+<span class="material-icons-round dark:hidden">dark_mode</span>
+<span class="material-icons-round hidden dark:block">light_mode</span>
+</button>
+</div>
+
+</body></html>
