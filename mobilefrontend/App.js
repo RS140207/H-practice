@@ -5,15 +5,16 @@ import {
   View, 
   TextInput, 
   ScrollView, 
-  SafeAreaView, 
   KeyboardAvoidingView, 
   Platform,
   Alert
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
 import { LinearGradient } from 'expo-linear-gradient';
 import { MotiView, AnimatePresence } from 'moti';
 import { Youtube, Sparkles, FileText } from 'lucide-react-native';
+import Markdown from 'react-native-markdown-display';
 
 import { Colors, Spacing } from './src/theme/colors';
 import { Button } from './src/components/Button';
@@ -25,30 +26,33 @@ export default function App() {
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState(null);
   const [type, setType] = useState(null); // 'transcript' or 'summary'
+  const [error, setError] = useState(null);
 
   const handleAction = async (action) => {
     if (!url) {
-      Alert.alert('Error', 'Please enter a YouTube URL');
+      setError('Please enter a YouTube URL');
       return;
     }
 
     setLoading(true);
     setResult(null);
+    setError(null);
+    setType(action === 'transcribe' ? 'transcript' : 'summary');
+    
     try {
       let data;
       if (action === 'transcribe') {
         data = await transcribeVideo(url);
         setResult(data.transcript);
-        setType('transcript');
       } else {
         data = await summarizeVideo(url);
         setResult(data.summary);
-        setType('summary');
       }
-    } catch (error) {
-      console.error(error);
-      const errorMsg = error.response?.data?.detail || error.message || 'Something went wrong';
-      Alert.alert('Error', errorMsg);
+    } catch (err) {
+      console.error(err);
+      const errorMsg = err.response?.data?.detail || err.message || 'Something went wrong';
+      setError(errorMsg);
+      setResult(null);
     } finally {
       setLoading(false);
     }
@@ -116,6 +120,19 @@ export default function App() {
           </MotiView>
 
           <AnimatePresence>
+            {error && (
+              <MotiView
+                from={{ opacity: 0, translateY: 20 }}
+                animate={{ opacity: 1, translateY: 0 }}
+                exit={{ opacity: 0, scale: 0.9 }}
+                style={styles.resultContainer}
+              >
+                <Card style={[styles.resultCard, styles.errorCard]}>
+                  <Text style={styles.errorTitle}>⚠️ Error</Text>
+                  <Text style={styles.errorText}>{error}</Text>
+                </Card>
+              </MotiView>
+            )}
             {result && (
               <MotiView
                 from={{ opacity: 0, translateY: 20 }}
@@ -134,7 +151,11 @@ export default function App() {
                   </Text>
                 </View>
                 <Card style={styles.resultCard}>
-                  <Text style={styles.resultText}>{result}</Text>
+                  {type === 'summary' ? (
+                    <Markdown style={markdownStyles}>{result}</Markdown>
+                  ) : (
+                    <Text style={styles.resultText}>{result}</Text>
+                  )}
                 </Card>
               </MotiView>
             )}
@@ -217,4 +238,102 @@ const styles = StyleSheet.create({
     lineHeight: 24,
     fontSize: 15,
   },
+  errorCard: {
+    backgroundColor: '#3F1E1E',
+    borderWidth: 1,
+    borderColor: '#EF4444',
+  },
+  errorTitle: {
+    color: '#FCA5A5',
+    fontSize: 18,
+    fontWeight: '700',
+    marginBottom: Spacing.sm,
+  },
+  errorText: {
+    color: '#FEE2E2',
+    lineHeight: 22,
+    fontSize: 14,
+  },
 });
+
+const markdownStyles = {
+  body: {
+    color: Colors.text,
+    fontSize: 15,
+    lineHeight: 24,
+  },
+  heading1: {
+    color: Colors.text,
+    fontSize: 24,
+    fontWeight: '700',
+    marginTop: Spacing.md,
+    marginBottom: Spacing.sm,
+  },
+  heading2: {
+    color: Colors.text,
+    fontSize: 20,
+    fontWeight: '600',
+    marginTop: Spacing.md,
+    marginBottom: Spacing.sm,
+  },
+  heading3: {
+    color: Colors.text,
+    fontSize: 18,
+    fontWeight: '600',
+    marginTop: Spacing.sm,
+    marginBottom: Spacing.xs,
+  },
+  bullet_list: {
+    marginVertical: Spacing.xs,
+  },
+  ordered_list: {
+    marginVertical: Spacing.xs,
+  },
+  list_item: {
+    marginVertical: 4,
+  },
+  paragraph: {
+    marginTop: 0,
+    marginBottom: Spacing.sm,
+    color: Colors.text,
+    lineHeight: 24,
+  },
+  strong: {
+    fontWeight: '700',
+    color: Colors.primary,
+  },
+  em: {
+    fontStyle: 'italic',
+  },
+  code_inline: {
+    backgroundColor: '#1E293B',
+    color: Colors.secondary,
+    paddingHorizontal: 6,
+    paddingVertical: 2,
+    borderRadius: 4,
+    fontFamily: Platform.OS === 'ios' ? 'Courier' : 'monospace',
+  },
+  code_block: {
+    backgroundColor: '#1E293B',
+    padding: Spacing.sm,
+    borderRadius: 8,
+    marginVertical: Spacing.sm,
+  },
+  fence: {
+    backgroundColor: '#1E293B',
+    padding: Spacing.sm,
+    borderRadius: 8,
+    marginVertical: Spacing.sm,
+  },
+  link: {
+    color: Colors.accent,
+  },
+  blockquote: {
+    backgroundColor: '#1E293B',
+    borderLeftColor: Colors.primary,
+    borderLeftWidth: 4,
+    paddingLeft: Spacing.md,
+    paddingVertical: Spacing.xs,
+    marginVertical: Spacing.sm,
+  },
+};
